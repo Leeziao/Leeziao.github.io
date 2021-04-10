@@ -6,17 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://leeziao.github.io">
-  <title>Leeziao的博客</title>
+  <title>计网培训-小型局域网 | Leeziao的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="华中科技大学人工智能与自动化学院">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Leeziao的博客">
-<meta property="og:url" content="https://leeziao.github.io/index.html">
+  <meta name="description" content="在VMWare上使用三台电脑组成局域网。虚拟机A作为局域网网关，虚拟机BC作为局域网内的一般机器。虚拟机BC之间可以通过虚拟机A作为网关相互通信，虚拟机BC又可以通过虚拟机A访问外网。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计网培训-小型局域网">
+<meta property="og:url" content="https://leeziao.github.io/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/index.html">
 <meta property="og:site_name" content="Leeziao的博客">
-<meta property="og:description" content="华中科技大学人工智能与自动化学院">
+<meta property="og:description" content="在VMWare上使用三台电脑组成局域网。虚拟机A作为局域网网关，虚拟机BC作为局域网内的一般机器。虚拟机BC之间可以通过虚拟机A作为网关相互通信，虚拟机BC又可以通过虚拟机A访问外网。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://leeziao.github.io/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/vms.png">
+<meta property="og:image" content="https://leeziao.github.io/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/iptable.png">
+<meta property="og:image" content="https://leeziao.github.io/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/nat.png">
+<meta property="article:published_time" content="2021-04-08T02:40:27.000Z">
+<meta property="article:modified_time" content="2021-04-10T06:14:07.463Z">
 <meta property="article:author" content="Leeziao">
+<meta property="article:tag" content="Dian">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="安全">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leeziao.github.io/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/vms.png">
   
     <link rel="alternative" href="/atom.xml" title="Leeziao的博客" type="application/atom+xml">
   
@@ -132,16 +141,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-计网培训-小型局域网" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-计网培训-小型局域网" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/">计网培训-小型局域网</a>
+    <h1 class="article-title" itemprop="name">
+      计网培训-小型局域网
     </h1>
   
 
@@ -155,7 +162,85 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>在VMWare上使用三台电脑组成局域网。虚拟机A作为局域网网关，虚拟机BC作为局域网内的一般机器。虚拟机BC之间可以通过虚拟机A作为网关相互通信，虚拟机BC又可以通过虚拟机A访问外网。</p>
-        
+<span id="more"></span>
+
+<p><img src="vms.png" alt="image-20210409221057743"></p>
+<h2 id="主机架构"><a href="#主机架构" class="headerlink" title="主机架构"></a>主机架构</h2><ul>
+<li>虚拟机A：<ul>
+<li>eth0（仅主机模式）：用于内网通信。在构建的局域网中作为虚拟机B和虚拟机C的网关</li>
+<li>eth1（NAT模式）：通过网关可以和主机通信</li>
+</ul>
+</li>
+<li>虚拟机B：<ul>
+<li>eht0（仅主机模式）</li>
+</ul>
+</li>
+<li>虚拟机C：<ul>
+<li>eth0（仅主机模式）</li>
+</ul>
+</li>
+</ul>
+<h2 id="虚拟机设置网卡"><a href="#虚拟机设置网卡" class="headerlink" title="虚拟机设置网卡"></a>虚拟机设置网卡</h2><ul>
+<li>虚拟机A网卡设置，修改<code>/etc/network/interfaces</code>，加入下面代码</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static  <span class="comment"># 静态IP</span></span><br><span class="line">address 10.1.2.254		<span class="comment"># 静态IP地址</span></span><br><span class="line">netmask 255.255.255.0	<span class="comment"># 子网掩码</span></span><br><span class="line"></span><br><span class="line">auto eth1</span><br><span class="line">iface eth1 inet static 	<span class="comment"># 静态IP</span></span><br><span class="line">address 192.168.237.5	<span class="comment"># 静态IP地址</span></span><br><span class="line">gateway 192.168.237.2 	<span class="comment"># NAT模式和主机通信的网关</span></span><br><span class="line">netmask 255.255.255.255	<span class="comment"># 子网掩码</span></span><br></pre></td></tr></table></figure>
+
+<p>​    更改网卡设置后，通过<code>sudo /etc/init.d/networking restart</code>重启网络服务</p>
+<ul>
+<li>虚拟机B网卡设置，修改<code>/etc/network/interfaces</code>，加入下面代码</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static</span><br><span class="line">address 10.1.2.100</span><br><span class="line">gateway 10.1.2.254		<span class="comment"># 网关地址为虚拟机eth0网卡地址</span></span><br><span class="line">netmask 255.255.255.0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>开启ipv4核心转发功能，使虚拟机B可以通过虚拟机Aping到虚拟C：修改<code>etc/sysctl.conf</code>，添加<strong>net.ipv4.ip_forward=1</strong>，<code>sysctl -p</code>重新加载配置文件</li>
+<li>主机网卡设置：在<strong>控制面板&gt;网络和Internet&gt;网络连接</strong>中配置网卡<code>VMnet8</code>：在Internet协议版本4中设置静态IP，在这次实验中的设置如下：<ul>
+<li>IP地址：192.168.237.1</li>
+<li>子网掩码：255.255.255.0</li>
+<li>默认网关：192.168.237.1</li>
+</ul>
+</li>
+</ul>
+<h2 id="Iptables"><a href="#Iptables" class="headerlink" title="Iptables"></a>Iptables</h2><blockquote>
+<p>参考资料：<a target="_blank" rel="noopener" href="https://www.zsythink.net/archives/1199">iptables详解（1）</a></p>
+</blockquote>
+<p><img src="iptable.png" alt="img"></p>
+<ul>
+<li>Why iptables：实现NAT转换，使虚拟机B和虚拟机C可以访问(ping)公网</li>
+<li><strong>iptables</strong>可以理解成一个客户端代理，客户通过这个代理设定安全框架，这个框架才是防火墙，叫做<strong>netfilter</strong></li>
+<li><strong>iptables+netfilter</strong>组成Linux下的包过滤防火墙，它有以下功能：<ol>
+<li>网络地址转换（NAT）</li>
+<li>数据包内容修改</li>
+<li>数据包过滤</li>
+</ol>
+</li>
+</ul>
+<h2 id="iptables与NAT"><a href="#iptables与NAT" class="headerlink" title="iptables与NAT"></a>iptables与NAT</h2><blockquote>
+<p>参考资料：<a target="_blank" rel="noopener" href="https://www.zsythink.net/archives/1764">iptables详解（13）</a></p>
+</blockquote>
+<blockquote>
+<p>当网络内部的主机向网络外部主机发送报文时，报文会经过防火墙或路由器，当报文经过防火墙或路由器时，将报文的源IP修改为防火墙或者路由器的IP地址，当其他网络中的主机收到这些报文时，显示的源IP地址则是路由器或者防火墙的，而不是那10台主机的IP地址，这样，就起到隐藏网络内部主机IP的作用，当网络内部主机的报文经过路由器时，路由器会维护一张NAT表，表中记录了报文来自于哪个内部主机的哪个进程（内部主机IP+端口），当报文经过路由器时，路由器会将报文的内部主机源IP替换为路由器的IP地址，把源端口也映射为某个端口，NAT表会把这种对应关系记录下来。</p>
+<p><img src="nat.png" alt="img"></p>
+</blockquote>
+<ul>
+<li>添加iptables转发规则：<code>iptables -t nat -A POSTROUTING -s 10.1.2.0/24 -j SNAT --to-source 192.168.237.5</code><ul>
+<li><code>-s 10.1.2.0/24</code>：报文来自于10.1.2.0/24网段</li>
+<li><code>-j SNAT</code>：使用SNAT动作，除此之外还有DNAT动作，见<a target="_blank" rel="noopener" href="https://www.zsythink.net/archives/1764">iptables详解（13）</a></li>
+<li><code>-A POSTROUTINING</code>：将该规则加入到POSTROUTINING链末尾</li>
+<li><code>--to-source 192.168.237.5</code>：将源IP修改为<code>192.168.237.5</code>，即虚拟机A的网卡地址</li>
+</ul>
+</li>
+</ul>
+<h2 id="TCPdump抓包"><a href="#TCPdump抓包" class="headerlink" title="TCPdump抓包"></a>TCPdump抓包</h2><ul>
+<li>当虚拟机B（10.1.2.101）ping虚拟机C（10.1.2.150），在虚拟机A（10.1.2.254）上抓包</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IP 10.1.2.101 &gt; 10.1.2.150: ICMP echo request</span><br><span class="line">IP 10.1.2.150 &gt; 10.1.2.101: ICMP echo reply</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当虚拟机B（10.1.2.101）ping主机（192.168.237.1）时，在虚拟机A（10.1.2.254）上抓包</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IP 10.1.2.101 &gt; 192.168.237.1: ICMP echo request</span><br><span class="line">IP 192.168.237.1 &gt; 10.1.2.101: ICMP echo reply</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
       
 
       
@@ -185,16 +270,14 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -209,13 +292,32 @@
         </div>
         
         
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E6%9E%B6%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">主机架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%AE%BE%E7%BD%AE%E7%BD%91%E5%8D%A1"><span class="toc-number">2.</span> <span class="toc-text">虚拟机设置网卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Iptables"><span class="toc-number">3.</span> <span class="toc-text">Iptables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iptables%E4%B8%8ENAT"><span class="toc-number">4.</span> <span class="toc-text">iptables与NAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCPdump%E6%8A%93%E5%8C%85"><span class="toc-number">5.</span> <span class="toc-text">TCPdump抓包</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
     </div>
 </aside>
 
 
 
+  
+  
+  
 
   
+
+  
+
   
 
 
@@ -238,8 +340,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
