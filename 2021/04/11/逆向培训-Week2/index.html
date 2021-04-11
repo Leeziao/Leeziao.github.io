@@ -6,17 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://leeziao.github.io">
-  <title>Archives: 2021/4 | Leeziao的博客</title>
+  <title>逆向培训-Week2 | Leeziao的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="华中科技大学人工智能与自动化学院">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Leeziao的博客">
-<meta property="og:url" content="https://leeziao.github.io/archives/2021/04/index.html">
+  <meta name="description" content="PE文件是可移植的可执行文件，包括.exe,.dll等。其结构为DOS头+PE头+块表(Section Table)+.text&#x2F;.data&#x2F;.rdata，PE文件的格式定义在&lt;winnt.h&gt;中。本文将完成一个简单的PE文件格式的解析器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逆向培训-Week2">
+<meta property="og:url" content="https://leeziao.github.io/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/index.html">
 <meta property="og:site_name" content="Leeziao的博客">
-<meta property="og:description" content="华中科技大学人工智能与自动化学院">
+<meta property="og:description" content="PE文件是可移植的可执行文件，包括.exe,.dll等。其结构为DOS头+PE头+块表(Section Table)+.text&#x2F;.data&#x2F;.rdata，PE文件的格式定义在&lt;winnt.h&gt;中。本文将完成一个简单的PE文件格式的解析器。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://leeziao.github.io/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/1.png">
+<meta property="og:image" content="https://leeziao.github.io/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/2.png">
+<meta property="og:image" content="https://leeziao.github.io/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/3.png">
+<meta property="article:published_time" content="2021-04-11T03:41:27.000Z">
+<meta property="article:modified_time" content="2021-04-11T15:49:38.380Z">
 <meta property="article:author" content="Leeziao">
+<meta property="article:tag" content="Dian">
+<meta property="article:tag" content="安全">
+<meta property="article:tag" content="逆向">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leeziao.github.io/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/1.png">
   
     <link rel="alternative" href="/atom.xml" title="Leeziao的博客" type="application/atom+xml">
   
@@ -132,36 +141,118 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-逆向培训-Week2" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      逆向培训-Week2
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/" class="archive-article-date">
+
+        
+        <a href="/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/" class="archive-article-date">
   	<time datetime="2021-04-11T03:41:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-11</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/04/11/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week2/">逆向培训-Week2</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>PE文件是可移植的可执行文件，包括.exe,.dll等。其结构为<strong>DOS头+PE头+块表(Section Table)+.text/.data/.rdata</strong>，PE文件的格式定义在&lt;winnt.h&gt;中。本文将完成一个简单的PE文件格式的解析器。</p>
+<span id="more"></span>
 
-        <div class="article-info info-on-right">
-          
+<p><img src="1.png" alt="image-20210411121008747"></p>
+<h2 id="Dos头-IMAGE-DOS-HEADER"><a href="#Dos头-IMAGE-DOS-HEADER" class="headerlink" title="Dos头 - IMAGE_DOS_HEADER"></a>Dos头 - IMAGE_DOS_HEADER</h2><p>Dos头在&lt;winnt.h&gt;中的定义如下，在32位/64位的系统中，只有<strong>e_magic</strong>和<strong>e_lfanew</strong>两个成员有用：</p>
+<ul>
+<li><code>e_magic</code>：判断一个文件是否是PE文件的Magic Number，应是0x4dh，0x5ah</li>
+<li><code>e_lfanew</code>：PE头相对于文件首的偏移量</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DOS_HEADER</span> &#123;</span>      <span class="comment">// DOS .EXE header</span></span><br><span class="line">    WORD   e_magic;                     <span class="comment">// Magic number</span></span><br><span class="line">    WORD   e_cblp;                      <span class="comment">// Bytes on last page of file</span></span><br><span class="line">    WORD   e_cp;                        <span class="comment">// Pages in file</span></span><br><span class="line">    WORD   e_crlc;                      <span class="comment">// Relocations</span></span><br><span class="line">    WORD   e_cparhdr;                   <span class="comment">// Size of header in paragraphs</span></span><br><span class="line">    WORD   e_minalloc;                  <span class="comment">// Minimum extra paragraphs needed</span></span><br><span class="line">    WORD   e_maxalloc;                  <span class="comment">// Maximum extra paragraphs needed</span></span><br><span class="line">    WORD   e_ss;                        <span class="comment">// Initial (relative) SS value</span></span><br><span class="line">    WORD   e_sp;                        <span class="comment">// Initial SP value</span></span><br><span class="line">    WORD   e_csum;                      <span class="comment">// Checksum</span></span><br><span class="line">    WORD   e_ip;                        <span class="comment">// Initial IP value</span></span><br><span class="line">    WORD   e_cs;                        <span class="comment">// Initial (relative) CS value</span></span><br><span class="line">    WORD   e_lfarlc;                    <span class="comment">// File address of relocation table</span></span><br><span class="line">    WORD   e_ovno;                      <span class="comment">// Overlay number</span></span><br><span class="line">    WORD   e_res[<span class="number">4</span>];                    <span class="comment">// Reserved words</span></span><br><span class="line">    WORD   e_oemid;                     <span class="comment">// OEM identifier (for e_oeminfo)</span></span><br><span class="line">    WORD   e_oeminfo;                   <span class="comment">// OEM information; e_oemid specific</span></span><br><span class="line">    WORD   e_res2[<span class="number">10</span>];                  <span class="comment">// Reserved words</span></span><br><span class="line">    LONG   e_lfanew;                    <span class="comment">// File address of new exe header</span></span><br><span class="line">  &#125; IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;</span><br></pre></td></tr></table></figure>
+
+<h2 id="PE头-IMAGE-NT-HEADERS"><a href="#PE头-IMAGE-NT-HEADERS" class="headerlink" title="PE头 - IMAGE_NT_HEADERS"></a>PE头 - IMAGE_NT_HEADERS</h2><p>PE头可以通过Dos头的<strong>e_lfanew</strong>成员定位得到。PE头由标准PE头和可选PE头两部分组成，<code>Signature</code>是PE头的Magic Number，为0x50h，0x45h，0x00h，0x00h。在*&lt;winnt.h&gt;*中，有32位和64位两种PE头，两者在可选PE头的定义不一样，这里以32位文件头为例。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_NT_HEADERS</span> &#123;</span></span><br><span class="line">    DWORD 					Signature;</span><br><span class="line">    IMAGE_FILE_HEADER 		FileHeader;</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;</span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
+
+<h3 id="标准PE头-IMAGE-FILE-HEADER"><a href="#标准PE头-IMAGE-FILE-HEADER" class="headerlink" title="标准PE头 - IMAGE_FILE_HEADER"></a>标准PE头 - IMAGE_FILE_HEADER</h3><p>标准PE头包含了最基础的文件信息，共20字节</p>
+<ul>
+<li><code>Machine</code>：程序可以执行的CPU平台。0x00：任何平台；0x14c：intel i386及后续处理器</li>
+<li><code>NumberOfSections</code>：PE文件中的section数</li>
+<li><code>TimeDateStamp</code>：时间戳，链接器产生此文件距离1969/12/31的总秒数</li>
+<li><code>PointerToSymbolTable</code>、<code>NumberOfSymbols</code>：只对COFF除错信息有用（现在没用</li>
+<li><code>SizeOfOptionalHeader</code>：可选PE头的大小。32位和64位的可选文件头不同</li>
+<li><code>Characteristics</code>：文件属性，它的每一位的含义也在**&lt;winnt.h&gt;**中有定义，如<code>#define IMAGE_FILE_DLL 0x2000</code></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_FILE_HEADER</span> &#123;</span></span><br><span class="line">    WORD    Machine;</span><br><span class="line">    WORD    NumberOfSections;</span><br><span class="line">    DWORD   TimeDateStamp;</span><br><span class="line">    DWORD   PointerToSymbolTable;</span><br><span class="line">    DWORD   NumberOfSymbols;</span><br><span class="line">    WORD    SizeOfOptionalHeader;</span><br><span class="line">    WORD    Characteristics;</span><br><span class="line">&#125; IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;</span><br></pre></td></tr></table></figure>
+
+<h3 id="可选PE头-IMAGE-OPTIONAL-HEADER32"><a href="#可选PE头-IMAGE-OPTIONAL-HEADER32" class="headerlink" title="可选PE头 - IMAGE_OPTIONAL_HEADER32"></a>可选PE头 - IMAGE_OPTIONAL_HEADER32</h3><ul>
+<li><code>Magic</code>：魔法数，标识32位可执行文件/64位可执行文件/ROM，具体定义如下:</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_NT_OPTIONAL_HDR32_MAGIC      0x10b</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_NT_OPTIONAL_HDR64_MAGIC      0x20b</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_ROM_OPTIONAL_HDR_MAGIC       0x107</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>MajorLinkerVersion</code>，<code>MinorLinkerVersion</code>：连接程序的主版本号及副版本号</li>
+<li><code>AddressOfEntryPoint</code>：程序执行入口的RVA（.text段中），在DLL中这个值可以被设为0</li>
+<li><code>BaseOfCode</code>：代码段的起始RVA，通常为1000h</li>
+<li><code>BaseOfData</code>：数据段的起始RVA</li>
+<li><code>ImageBase</code>：文件在内存中装入的首选地址，一般为40000h</li>
+<li><code>SectionAlignment</code>：内存中PE文件的区块对齐大小，最小尺寸为一页1000h（4KB）</li>
+<li><code>FileAlignment</code>：磁盘上PE文件的区块对齐大小，通常为200h或1000h</li>
+<li><code>NumberOfRvaAndSizes</code>：数据目录表的项数，为16</li>
+<li><code>DataDirectory[16]</code>：数据目录表，包括输入表、输出表等重要信息，其定义如下：<code>Size</code>为该表的大小，<code>VirtualAddress</code>为该目录表的RVA</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DATA_DIRECTORY</span> &#123;</span></span><br><span class="line">    DWORD   VirtualAddress;</span><br><span class="line">    DWORD   Size;</span><br><span class="line">&#125; IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;</span><br></pre></td></tr></table></figure>
+
+<p>可选PE头在**&lt;winnt.h&gt;**中的完整定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_OPTIONAL_HEADER</span> &#123;</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// Standard fields.</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line"></span><br><span class="line">    WORD    Magic;</span><br><span class="line">    BYTE    MajorLinkerVersion;</span><br><span class="line">    BYTE    MinorLinkerVersion;</span><br><span class="line">    DWORD   SizeOfCode;</span><br><span class="line">    DWORD   SizeOfInitializedData;</span><br><span class="line">    DWORD   SizeOfUninitializedData;</span><br><span class="line">    DWORD   AddressOfEntryPoint;</span><br><span class="line">    DWORD   BaseOfCode;</span><br><span class="line">    DWORD   BaseOfData;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// NT additional fields.</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line"></span><br><span class="line">    DWORD   ImageBase;</span><br><span class="line">    DWORD   SectionAlignment;</span><br><span class="line">    DWORD   FileAlignment;</span><br><span class="line">    WORD    MajorOperatingSystemVersion;</span><br><span class="line">    WORD    MinorOperatingSystemVersion;</span><br><span class="line">    WORD    MajorImageVersion;</span><br><span class="line">    WORD    MinorImageVersion;</span><br><span class="line">    WORD    MajorSubsystemVersion;</span><br><span class="line">    WORD    MinorSubsystemVersion;</span><br><span class="line">    DWORD   Win32VersionValue;</span><br><span class="line">    DWORD   SizeOfImage;</span><br><span class="line">    DWORD   SizeOfHeaders;</span><br><span class="line">    DWORD   CheckSum;</span><br><span class="line">    WORD    Subsystem;</span><br><span class="line">    WORD    DllCharacteristics;</span><br><span class="line">    DWORD   SizeOfStackReserve;</span><br><span class="line">    DWORD   SizeOfStackCommit;</span><br><span class="line">    DWORD   SizeOfHeapReserve;</span><br><span class="line">    DWORD   SizeOfHeapCommit;</span><br><span class="line">    DWORD   LoaderFlags;</span><br><span class="line">    DWORD   NumberOfRvaAndSizes;</span><br><span class="line">    IMAGE_DATA_DIRECTORY 	DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];</span><br><span class="line">&#125; IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;</span><br></pre></td></tr></table></figure>
+
+<h2 id="块表-Section-Table-IMAGE-SECTION-HEADER"><a href="#块表-Section-Table-IMAGE-SECTION-HEADER" class="headerlink" title="块表(Section Table) - IMAGE_SECTION_HEADER"></a>块表(Section Table) - IMAGE_SECTION_HEADER</h2><p>PE文件中有许多Section，如.text，.data，.rdata，每一个section都有一个其对应的Header。与目录表不同，目录表不管有多少个表，其数组大小总是16，而Section Table只会按照顺序记录section，并不会中间留空。这些Header紧跟在目录表的后面。<code>VirtualAddress</code>和<code>PointerToRawData</code>可以共同构成RVA和Offset之间的转化。</p>
+<ul>
+<li><code>Name</code>：section的名字，除了.text之类的常见的名字，也可以取一些奇奇怪怪的名字</li>
+<li><code>VirtualSize</code>：该section没有被对齐处理之前的实际大小</li>
+<li><code>VirtualAddress</code>：该section装载到内存后的RVA，按照<code>SectionAlignment</code>对齐</li>
+<li><code>SizeOfRawData</code>：该section在磁盘文件中的大小，这个字段经过了<code>FileAlignment</code>的对齐</li>
+<li><code>PointerToRawData</code>：该section在磁盘文件中的偏移</li>
+<li><code>Characteristics</code>：该section的属性，包括代码、数据、可读、可写、共享等。<code>Characteristic</code>的几个参数如下（更多参数见**&lt;winnt.h&gt;**）</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SCN_MEM_NOT_CACHED             0x04000000  <span class="comment">// Section is not cachable.</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SCN_MEM_NOT_PAGED              0x08000000  <span class="comment">// Section is not pageable.</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SCN_MEM_SHARED                 0x10000000  <span class="comment">// Section is shareable.</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SCN_MEM_EXECUTE                0x20000000  <span class="comment">// Section is executable.</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SCN_MEM_READ                   0x40000000  <span class="comment">// Section is readable.</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SCN_MEM_WRITE                  0x80000000  <span class="comment">// Section is writeable.</span></span></span><br></pre></td></tr></table></figure>
+
+<p>Section Table的全部定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SIZEOF_SHORT_NAME              8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_SECTION_HEADER</span> &#123;</span></span><br><span class="line">    BYTE    Name[IMAGE_SIZEOF_SHORT_NAME];</span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">            DWORD   PhysicalAddress;</span><br><span class="line">            DWORD   VirtualSize;</span><br><span class="line">    &#125; Misc;</span><br><span class="line">    DWORD   VirtualAddress;</span><br><span class="line">    DWORD   SizeOfRawData;</span><br><span class="line">    DWORD   PointerToRawData;</span><br><span class="line">    DWORD   PointerToRelocations;</span><br><span class="line">    DWORD   PointerToLinenumbers;</span><br><span class="line">    WORD    NumberOfRelocations;</span><br><span class="line">    WORD    NumberOfLinenumbers;</span><br><span class="line">    DWORD   Characteristics;</span><br><span class="line">&#125; IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_SIZEOF_SECTION_HEADER          40</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="输入表-IMAGE-IMPORT-DESCRIPTOR"><a href="#输入表-IMAGE-IMPORT-DESCRIPTOR" class="headerlink" title="输入表 - IMAGE_IMPORT_DESCRIPTOR"></a>输入表 - IMAGE_IMPORT_DESCRIPTOR</h2><p>当可执行文件通过共享库（DLL）调用其他位置的函数时，需要通过输入表确认该函数的位置。每个DLL文件都有一个<strong>IMAGE_IMPORT_DESCRIPTOR（IID）</strong>，他们顺序堆放，最后以一个全0的IID作为结尾。为了简洁，这次只对PE文件中的IID进行解析。</p>
+<h3 id="输入表结构"><a href="#输入表结构" class="headerlink" title="输入表结构"></a>输入表结构</h3><ul>
+<li>输入表在<strong>文件</strong>中的存储方式如下</li>
+</ul>
+<p><img src="2.png" alt="image-20210411165505543"></p>
+<ul>
+<li>当程序加载完成后，IAT表会指向对应函数的地址，输入表在<strong>内存</strong>中的存储方式如下：</li>
+</ul>
+<p><img src="3.png" alt="image-20210411165718991"></p>
+<h3 id="输入表格式"><a href="#输入表格式" class="headerlink" title="输入表格式"></a>输入表格式</h3><ul>
+<li><code>OriginalFirstThunk</code>：INT的RVA</li>
+<li><code>Name</code>：该DLL的名字的RVA</li>
+<li><code>FirstThunk</code>：IAT的RVA</li>
+</ul>
+<p><strong>IMAGE_IMPORT_BY_NAME</strong>的name虽然定义的时候大小为1，但在实际分配的时候大小并不为1，它的大小能够存储对应函数的函数名。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_DESCRIPTOR</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        DWORD   Characteristics;            <span class="comment">// 0 for terminating null import descriptor</span></span><br><span class="line">        DWORD   OriginalFirstThunk;         <span class="comment">// RVA to original unbound IAT (PIMAGE_THUNK_DATA)</span></span><br><span class="line">    &#125; DUMMYUNIONNAME;</span><br><span class="line">    DWORD   TimeDateStamp;</span><br><span class="line"></span><br><span class="line">    DWORD   ForwarderChain;                 <span class="comment">// -1 if no forwarders</span></span><br><span class="line">    DWORD   Name;</span><br><span class="line">    DWORD   FirstThunk;                     <span class="comment">// RVA to IAT (if bound this IAT has actual addresses)</span></span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_BY_NAME</span> &#123;</span></span><br><span class="line">    WORD    Hint;</span><br><span class="line">    CHAR   Name[<span class="number">1</span>];</span><br><span class="line">&#125; IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解析代码"><a href="#解析代码" class="headerlink" title="解析代码"></a>解析代码</h2><p>为了方便起见，代码只解析了32位EXE文件的输入表部分。解析结果如下：</p>
+<h3 id="代码运行结果"><a href="#代码运行结果" class="headerlink" title="代码运行结果"></a>代码运行结果</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">[*] DOS Header Magic Number Correct</span><br><span class="line">[*] NT Header Magic Number Correct</span><br><span class="line">[*] This file has 15 sections</span><br><span class="line">[*] Resolving 32 bits PE file</span><br><span class="line">[*] EntryPoint RVA: 14e0</span><br><span class="line">[*] Base of code RVA: 1000</span><br><span class="line">[*] Base of data RVA: 3000</span><br><span class="line">[*] Base of Image RVA: 400000</span><br><span class="line">[*] Section Alignment of PE <span class="keyword">in</span> memory: 1000</span><br><span class="line">[*] Section Alignment of PE on Disk: 200</span><br><span class="line">[*] Number of Directories: 16</span><br><span class="line">[*] RVA of Import Table: 6000</span><br><span class="line">[*] Offset of Import Table: 3000</span><br><span class="line">[*] KERNEL32.dll DLL Checking</span><br><span class="line">[*]     DeleteCriticalSection Function Found</span><br><span class="line">[*]     EnterCriticalSection Function Found</span><br><span class="line">[*]     GetCurrentProcess Function Found</span><br><span class="line">[*]     GetCurrentProcessId Function Found</span><br><span class="line">[*]     GetCurrentThreadId Function Found</span><br><span class="line">[*]     GetLastError Function Found</span><br><span class="line">[*]     GetModuleFileNameW Function Found</span><br><span class="line">[*]     GetStartupInfoA Function Found</span><br><span class="line">[*]     GetSystemTimeAsFileTime Function Found</span><br><span class="line">[*]     GetTickCount Function Found</span><br><span class="line">[*]     InitializeCriticalSection Function Found</span><br><span class="line">[*]     LeaveCriticalSection Function Found</span><br><span class="line">[*]     QueryPerformanceCounter Function Found</span><br><span class="line">[*]     SetUnhandledExceptionFilter Function Found</span><br><span class="line">[*]     Sleep Function Found</span><br><span class="line">[*]     TerminateProcess Function Found</span><br><span class="line">[*]     TlsGetValue Function Found</span><br><span class="line">[*]     UnhandledExceptionFilter Function Found</span><br><span class="line">[*]     VirtualProtect Function Found</span><br><span class="line">[*]     VirtualQuery Function Found</span><br><span class="line">[*] msvcrt.dll DLL Checking</span><br><span class="line">[*]     __dllonexit Function Found</span><br><span class="line">[*]     __getmainargs Function Found</span><br><span class="line">[*]     __initenv Function Found</span><br><span class="line">[*]     __lconv_init Function Found</span><br><span class="line">[*]     __set_app_type Function Found</span><br><span class="line">[*]     __setusermatherr Function Found</span><br><span class="line">[*]     _acmdln Function Found</span><br><span class="line">[*]     _amsg_exit Function Found</span><br><span class="line">[*]     _cexit Function Found</span><br><span class="line">[*]     _exit Function Found</span><br><span class="line">[*]     _fmode Function Found</span><br><span class="line">[*]     _initterm Function Found</span><br><span class="line">[*]     _iob Function Found</span><br><span class="line">[*]     _lock Function Found</span><br><span class="line">[*]     _onexit Function Found</span><br><span class="line">[*]     _snwprintf Function Found</span><br><span class="line">[*]     _unlock Function Found</span><br><span class="line">[*]     abort Function Found</span><br><span class="line">[*]     calloc Function Found</span><br><span class="line">[*]     <span class="built_in">exit</span> Function Found</span><br><span class="line">[*]     fclose Function Found</span><br><span class="line">[*]     fopen Function Found</span><br><span class="line">[*]     fprintf Function Found</span><br><span class="line">[*]     fread Function Found</span><br><span class="line">[*]     free Function Found</span><br><span class="line">[*]     fseek Function Found</span><br><span class="line">[*]     ftell Function Found</span><br><span class="line">[*]     fwprintf Function Found</span><br><span class="line">[*]     fwrite Function Found</span><br><span class="line">[*]     malloc Function Found</span><br><span class="line">[*]     memcpy Function Found</span><br><span class="line">[*]     memset Function Found</span><br><span class="line">[*]     <span class="built_in">printf</span> Function Found</span><br><span class="line">[*]     puts Function Found</span><br><span class="line">[*]     raise Function Found</span><br><span class="line">[*]     rewind Function Found</span><br><span class="line">[*]     signal Function Found</span><br><span class="line">[*]     strlen Function Found</span><br><span class="line">[*]     strncmp Function Found</span><br><span class="line">[*]     vfprintf Function Found</span><br><span class="line">[*]     wcscpy Function Found</span><br><span class="line">[*] USER32.dll DLL Checking</span><br><span class="line">[*]     MessageBoxW Function Found</span><br><span class="line">[o] Success!</span><br></pre></td></tr></table></figure>
+
+<h3 id="实际代码"><a href="#实际代码" class="headerlink" title="实际代码"></a>实际代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// parser.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;winnt.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Myfile</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    FILE                    *fp;</span><br><span class="line">    IMAGE_DOS_HEADER        *dos_header;</span><br><span class="line">    IMAGE_NT_HEADERS32      *nt_header;</span><br><span class="line">    IMAGE_FILE_HEADER       *file_header;</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 *optional_header;</span><br><span class="line">    IMAGE_SECTION_HEADER    *section_header;</span><br><span class="line">    IMAGE_IMPORT_DESCRIPTOR *import_descriptor;</span><br><span class="line">    <span class="keyword">int</span>                     NumberOfSections;</span><br><span class="line">&#125; Myfile;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ReadDosHeader</span><span class="params">(Myfile *myfile)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ReadNTHeader</span><span class="params">(Myfile *myfile)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ReadImportDescriptor</span><span class="params">(Myfile *myfile)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">FILE* <span class="title">GetFile</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>;</span><br><span class="line"><span class="function">Myfile* <span class="title">NewFile</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">RvaToOffset</span><span class="params">(Myfile *myfile, <span class="keyword">long</span> RVA)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// parser.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;parser.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> *buffer;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Myfile *myfile;</span><br><span class="line">    myfile      = NewFile();</span><br><span class="line"></span><br><span class="line">    myfile-&gt;fp          = GetFile(argc, argv);</span><br><span class="line">    ReadDosHeader(myfile);</span><br><span class="line">    ReadNTHeader(myfile);</span><br><span class="line">    ReadImportDescriptor(myfile);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(buffer);</span><br><span class="line">    fclose(myfile-&gt;fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[o] Success!\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ReadImportDescriptor</span><span class="params">(Myfile *myfile)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IMAGE_IMPORT_DESCRIPTOR *descriptor = myfile-&gt;import_descriptor;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">0</span> != descriptor-&gt;Name)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[*] %s DLL Checking\n&quot;</span>, buffer + RvaToOffset(myfile, descriptor-&gt;Name));</span><br><span class="line">        DWORD INT_Offset = RvaToOffset(myfile, descriptor-&gt;OriginalFirstThunk);</span><br><span class="line">        DWORD IAT_Offset = RvaToOffset(myfile, descriptor-&gt;FirstThunk);</span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            DWORD *named_function1 = (DWORD*)(buffer + INT_Offset);</span><br><span class="line">            DWORD *named_function2 = (DWORD*)(buffer + IAT_Offset);</span><br><span class="line"></span><br><span class="line">            assert(*named_function1 == *named_function2);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="number">0</span> == *named_function1)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            IMAGE_IMPORT_BY_NAME *named_function = (IMAGE_IMPORT_BY_NAME*)(buffer + RvaToOffset(myfile, *named_function1));</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;[*] \t%s Function Found\n&quot;</span>, named_function-&gt;Name);</span><br><span class="line">            INT_Offset += <span class="number">4</span>;</span><br><span class="line">            IAT_Offset += <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        descriptor += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">RvaToOffset</span><span class="params">(Myfile *myfile, <span class="keyword">long</span> RVA)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IMAGE_SECTION_HEADER *header = myfile-&gt;section_header;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; myfile-&gt;NumberOfSections; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (RVA &gt;= header-&gt;VirtualAddress &amp;&amp; RVA &lt;= (header-&gt;VirtualAddress + (header-&gt;Misc).VirtualSize))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> RVA - header-&gt;VirtualAddress + header-&gt;PointerToRawData;</span><br><span class="line">        &#125;</span><br><span class="line">        header++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[x] header cannot be found\n&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ReadNTHeader</span><span class="params">(Myfile *myfile)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> nt_offset = myfile-&gt;dos_header-&gt;e_lfanew;</span><br><span class="line">    myfile-&gt;nt_header = (IMAGE_NT_HEADERS32*)(buffer + nt_offset);</span><br><span class="line">    <span class="keyword">if</span> (myfile-&gt;nt_header-&gt;Signature != <span class="number">0x4550</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[x] NT Header check fail&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] NT Header Magic Number Correct\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    myfile-&gt;file_header = (IMAGE_FILE_HEADER*)(buffer + nt_offset + <span class="number">4</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] This file has %d sections\n&quot;</span>, myfile-&gt;file_header-&gt;NumberOfSections);</span><br><span class="line">    myfile-&gt;NumberOfSections = myfile-&gt;file_header-&gt;NumberOfSections;</span><br><span class="line"></span><br><span class="line">    myfile-&gt;optional_header = (IMAGE_OPTIONAL_HEADER32*)(buffer + nt_offset + <span class="number">4</span> + <span class="keyword">sizeof</span>(IMAGE_FILE_HEADER));</span><br><span class="line">    <span class="keyword">if</span> (myfile-&gt;optional_header-&gt;Magic == <span class="number">0x20b</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[x] Cannot resolve 64 bits PE file\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (myfile-&gt;optional_header-&gt;Magic == <span class="number">0x10b</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[*] Resolving 32 bits PE file\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[x] Optional Header Magic fail\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] EntryPoint RVA: %x\n&quot;</span>, myfile-&gt;optional_header-&gt;AddressOfEntryPoint);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Base of code RVA: %x\n&quot;</span>, myfile-&gt;optional_header-&gt;BaseOfCode);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Base of data RVA: %x\n&quot;</span>, myfile-&gt;optional_header-&gt;BaseOfData);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Base of Image RVA: %x\n&quot;</span>, myfile-&gt;optional_header-&gt;ImageBase);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Section Alignment of PE in memory: %x\n&quot;</span>, myfile-&gt;optional_header-&gt;SectionAlignment);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Section Alignment of PE on Disk: %x\n&quot;</span>, myfile-&gt;optional_header-&gt;FileAlignment);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Number of Directories: %d\n&quot;</span>, myfile-&gt;optional_header-&gt;NumberOfRvaAndSizes);</span><br><span class="line"></span><br><span class="line">    myfile-&gt;section_header = (IMAGE_SECTION_HEADER*)(buffer + nt_offset + <span class="keyword">sizeof</span>(IMAGE_NT_HEADERS32));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] RVA of Import Table: %x\n&quot;</span>,  myfile-&gt;optional_header-&gt;DataDirectory[<span class="number">1</span>].VirtualAddress);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Offset of Import Table: %x\n&quot;</span>, RvaToOffset(myfile, myfile-&gt;optional_header-&gt;DataDirectory[<span class="number">1</span>].VirtualAddress));</span><br><span class="line"></span><br><span class="line">    myfile-&gt;import_descriptor = (IMAGE_IMPORT_DESCRIPTOR*)(buffer + RvaToOffset(myfile, myfile-&gt;optional_header-&gt;DataDirectory[<span class="number">1</span>].VirtualAddress));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ReadDosHeader</span><span class="params">(Myfile *myfile)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FILE *fp = myfile-&gt;fp;</span><br><span class="line">    IMAGE_DOS_HEADER *header = (IMAGE_DOS_HEADER*)(buffer + <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (header-&gt;e_magic != <span class="number">0x5a4d</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[x] Dos Header check fail\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] DOS Header Magic Number Correct\n&quot;</span>);</span><br><span class="line">    myfile-&gt;dos_header = header;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">FILE* <span class="title">GetFile</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    assert(argc == <span class="number">2</span>);</span><br><span class="line">    FILE *fp = fopen(argv[<span class="number">1</span>], <span class="string">&quot;rb&quot;</span>);</span><br><span class="line">    fseek(fp, <span class="number">0</span>, SEEK_END);</span><br><span class="line">    <span class="keyword">long</span> len = ftell(fp);</span><br><span class="line">    buffer = (<span class="keyword">unsigned</span> <span class="keyword">char</span>*)<span class="built_in">malloc</span>(len);</span><br><span class="line">    rewind(fp);</span><br><span class="line">    fread(buffer, len, <span class="number">1</span>, fp);</span><br><span class="line">    <span class="keyword">return</span> fp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Myfile* <span class="title">NewFile</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Myfile *file = (Myfile*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Myfile));</span><br><span class="line">    assert(file != <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">memset</span>(file, <span class="number">0x00</span>, <span class="keyword">sizeof</span>(Myfile));</span><br><span class="line">    <span class="keyword">return</span> file;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -181,111 +272,68 @@
 		</ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/04/10/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week1/" class="archive-article-date">
-  	<time datetime="2021-04-10T06:40:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-10</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/04/10/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">逆向培训-Week1</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/04/10/%E9%80%86%E5%90%91%E5%9F%B9%E8%AE%AD-Week1/">逆向培训-Week1</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Dian</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">逆向</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dos%E5%A4%B4-IMAGE-DOS-HEADER"><span class="toc-number">1.</span> <span class="toc-text">Dos头 - IMAGE_DOS_HEADER</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PE%E5%A4%B4-IMAGE-NT-HEADERS"><span class="toc-number">2.</span> <span class="toc-text">PE头 - IMAGE_NT_HEADERS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86PE%E5%A4%B4-IMAGE-FILE-HEADER"><span class="toc-number">2.1.</span> <span class="toc-text">标准PE头 - IMAGE_FILE_HEADER</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%80%89PE%E5%A4%B4-IMAGE-OPTIONAL-HEADER32"><span class="toc-number">2.2.</span> <span class="toc-text">可选PE头 - IMAGE_OPTIONAL_HEADER32</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%97%E8%A1%A8-Section-Table-IMAGE-SECTION-HEADER"><span class="toc-number">3.</span> <span class="toc-text">块表(Section Table) - IMAGE_SECTION_HEADER</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%A1%A8-IMAGE-IMPORT-DESCRIPTOR"><span class="toc-number">4.</span> <span class="toc-text">输入表 - IMAGE_IMPORT_DESCRIPTOR</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">4.1.</span> <span class="toc-text">输入表结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%A1%A8%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">输入表格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E4%BB%A3%E7%A0%81"><span class="toc-number">5.</span> <span class="toc-text">解析代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.1.</span> <span class="toc-text">代码运行结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E4%BB%A3%E7%A0%81"><span class="toc-number">5.2.</span> <span class="toc-text">实际代码</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/" class="archive-article-date">
-  	<time datetime="2021-04-08T02:40:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-08</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/04/08/%E8%AE%A1%E7%BD%91%E5%9F%B9%E8%AE%AD-%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91/">计网培训-小型局域网</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Dian</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -308,8 +356,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
