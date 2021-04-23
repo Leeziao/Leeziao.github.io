@@ -1,0 +1,269 @@
+->Import Table
+   1. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x00010358  ("kernel32.dll")
+    FirstThunk:          0x0001012C
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "DeleteCriticalSection"
+    0x0000       "LeaveCriticalSection"
+    0x0000       "EnterCriticalSection"
+    0x0000       "InitializeCriticalSection"
+
+    0x0000       "VirtualFree"
+    0x0000       "VirtualAlloc"
+    0x0000       "LocalFree"
+    0x0000       "LocalAlloc"
+
+    0x0000       "GetTickCount"
+    0x0000       "QueryPerformanceCounter"
+    0x0000       "GetVersion"
+    0x0000       "GetCurrentThreadId"
+    0x0000       "WideCharToMultiByte"
+    0x0000       "MultiByteToWideChar"
+
+    0x0000       "GetThreadLocale"
+    0x0000       "GetStartupInfoA"
+    0x0000       "GetModuleFileNameA"
+    0x0000       "GetLocaleInfoA"
+    0x0000       "GetLastError"
+    0x0000       "GetCommandLineA"
+
+    0x0000       "FreeLibrary"
+    0x0000       "ExitProcess"
+    0x0000       "CreateThread"
+    0x0000       "WriteFile"
+    0x0000       "UnhandledExceptionFilter"
+    0x0000       "SetFilePointer"
+    0x0000       "SetEndOfFile"
+    0x0000       "RtlUnwind"
+    0x0000       "ReadFile"
+    0x0000       "RaiseException"
+    0x0000       "GetStdHandle"
+    0x0000       "GetFileSize"
+    0x0000       "GetFileType"
+    0x0000       "CreateFileA"
+    0x0000       "CloseHandle"
+
+   2. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x000105D2  ("user32.dll")
+    FirstThunk:          0x000101BC
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "GetKeyboardType"
+    0x0000       "MessageBoxA"
+    0x0000       "CharNextA"
+
+   3. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x0001060A  ("advapi32.dll")
+    FirstThunk:          0x000101CC
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "RegQueryValueExA"
+    0x0000       "RegOpenKeyExA"
+    0x0000       "RegCloseKey"
+
+   4. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x0001064A  ("oleaut32.dll")
+    FirstThunk:          0x000101DC
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "SysFreeString"
+    0x0000       "SysAllocStringLen"
+
+   5. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x0001067C  ("kernel32.dll")
+    FirstThunk:          0x000101E8
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "TlsSetValue"
+    0x0000       "TlsGetValue"
+    0x0000       "LocalAlloc"
+    0x0000       "GetModuleHandleA"
+
+   6. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x000106C8  ("advapi32.dll")
+    FirstThunk:          0x000101FC
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "RegSetValueExA"
+    0x0000       "RegOpenKeyExA"
+    0x0000       "RegDeleteValueA"
+    0x0000       "RegCreateKeyExA"
+    0x0000       "RegCloseKey"
+    0x0000       "OpenProcessToken"
+    0x0000       "LookupPrivilegeValueA"
+    0x0000       "AdjustTokenPrivileges"
+
+   7. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x0001076E  ("kernel32.dll")
+    FirstThunk:          0x00010220
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "WriteFile"
+    0x0000       "WinExec"
+    0x0000       "TerminateProcess"
+    0x0000       "Sleep"
+    0x0000       "SetFilePointer"
+    0x0000       "SetFileAttributesA"
+    0x0000       "OpenProcess"
+    0x0000       "LoadLibraryA"
+    0x0000       "GetWindowsDirectoryA"
+    0x0000       "GetVersionExA"
+    0x0000       "GetTempPathA"
+    0x0000       "GetSystemDirectoryA"
+    0x0000       "GetProcAddress"
+    0x0000       "GetModuleHandleA"
+    0x0000       "GetModuleFileNameA"
+    0x0000       "GetLocalTime"
+    0x0000       "GetLastError"
+    0x0000       "GetFileAttributesA"
+    0x0000       "GetDriveTypeA"
+    0x0000       "GetCurrentProcess"
+    0x0000       "FreeLibrary"
+    0x0000       "FindNextFileA"
+    0x0000       "FindFirstFileA"
+    0x0000       "FindClose"
+    0x0000       "FileTimeToLocalFileTime"
+    0x0000       "FileTimeToDosDateTime"
+    0x0000       "ExitProcess"
+    0x0000       "DeleteFileA"
+    0x0000       "CreateThread"
+    0x0000       "CreateFileA"
+    0x0000       "CopyFileA"
+    0x0000       "CompareStringA"
+    0x0000       "CloseHandle"
+
+   8. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x000109AC  ("mpr.dll")
+    FirstThunk:          0x000102A8
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "WNetCancelConnectionA"
+    0x0000       "WNetAddConnection2A"
+
+   9. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x000109E2  ("user32.dll")
+    FirstThunk:          0x000102B4
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "keybd_event"
+    0x0000       "SetTimer"
+    0x0000       "PostMessageA"
+    0x0000       "MapVirtualKeyA"
+    0x0000       "KillTimer"
+    0x0000       "GetWindowTextA"
+    0x0000       "GetMessageA"
+    0x0000       "GetDesktopWindow"
+    0x0000       "FindWindowExA"
+    0x0000       "FindWindowA"
+    0x0000       "DispatchMessageA"
+    0x0000       "CharUpperBuffA"
+
+   10. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x00010AAE  ("wsock32.dll")
+    FirstThunk:          0x000102E8
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "WSACleanup"
+    0x0000       "WSAStartup"
+    0x0000       "gethostname"
+    0x0000       "gethostbyname"
+    0x0000       "socket"
+    0x0000       "inet_ntoa"
+    0x0000       "inet_addr"
+    0x0000       "htons"
+    0x0000       "connect"
+    0x0000       "closesocket"
+
+   11. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x00010B36  ("wininet.dll")
+    FirstThunk:          0x00010314
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "InternetGetConnectedState"
+    0x0000       "InternetReadFile"
+    0x0000       "InternetOpenUrlA"
+    0x0000       "InternetOpenA"
+    0x0000       "InternetCloseHandle"
+
+   12. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x00010BAC  ("advapi32.dll")
+    FirstThunk:          0x0001032C
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "OpenServiceA"
+    0x0000       "OpenSCManagerA"
+    0x0000       "DeleteService"
+    0x0000       "ControlService"
+    0x0000       "CloseServiceHandle"
+
+   13. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x00010C14  ("netapi32.dll")
+    FirstThunk:          0x00010344
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "NetRemoteTOD"
+    0x0000       "NetScheduleJobAdd"
+
+   14. ImageImportDescriptor:
+    OriginalFirstThunk:  0x00000000
+    TimeDateStamp:       0x00000000  (GMT: Thu Jan 01 00:00:00 1970)
+    ForwarderChain:      0x00000000
+    Name:                0x00010C46  ("URLMON.DLL")
+    FirstThunk:          0x00010350
+
+    Ordinal/Hint API name
+    ------------ ---------------------------------------
+    0x0000       "URLDownloadToFileA"

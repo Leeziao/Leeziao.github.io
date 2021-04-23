@@ -1,0 +1,22 @@
+时间：
+   GetTickCount   // 利用计时器
+文件：
+   ReadFile
+   CreateFileA
+   DeleteFileA
+   CopyFileA      // 可能会自我复制
+   FindNextFileA  
+   FindFirstFileA // 可能会遍历目录
+线程：
+   CreateThread
+网络：
+   socket
+   connect
+   InternetReadFile
+   InternetOpenUrlA
+   InternetOpenA
+   URLDownloadToFileA   // 病毒可能会联网下载
+注册表：
+   RegSetValueExA
+   RegDeleteValueA
+   RegCreateKeyExA
